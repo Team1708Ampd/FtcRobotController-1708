@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.subsystems.ClawSub;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSub;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSub;
 
-@TeleOp(name = "ButtonTest")
-public class ButtonTest extends LinearOpMode {
+@TeleOp(name = "BasicDrive")
+public class BasicDrive extends LinearOpMode {
 
     DcMotor frontLeftDrive;
     DcMotor frontRightDrive;
@@ -31,7 +31,9 @@ public class ButtonTest extends LinearOpMode {
         backRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         elevatorSub.leftElevator = hardwareMap.get(DcMotor.class, "leftElevator");
+        elevatorSub.leftElevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevatorSub.rightElevator = hardwareMap.get(DcMotor.class, "rightElevator");
+        elevatorSub.rightElevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevatorSub.rightElevator.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorSub.lateralLeftElevator = hardwareMap.get(DcMotor.class, "lateralLeftElevator");
         elevatorSub.lateralLeftElevator.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -43,53 +45,46 @@ public class ButtonTest extends LinearOpMode {
 
         intakeSub.intakeServo = hardwareMap.get(CRServo.class, "intake");
         intakeSub.intakeRotation = hardwareMap.get(Servo.class, "rotate");
+        intakeSub.intakeRotation.setDirection(Servo.Direction.REVERSE);
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            if (gamepad1.a) frontLeftDrive.setPower(0.5);
-            else frontLeftDrive.setPower(0);
+            if (gamepad1.left_bumper) {
+                elevatorSub.setPower(0.5);
+            } else if (gamepad1.right_bumper) {
+                elevatorSub.setPower(-0.5);
+            } else {
+                elevatorSub.setPower(0);
+            }
 
-            if (gamepad1.b) frontRightDrive.setPower(0.5);
-            else frontRightDrive.setPower(0);
+            if (gamepad1.x) {
+                elevatorSub.setLateralPower(0.5);
+            } else if (gamepad1.y) {
+                elevatorSub.setLateralPower(-0.5);
+            } else {
+                elevatorSub.setLateralPower(0);
+            }
 
-            if (gamepad1.x) backRightDrive.setPower(0.5);
-            else backRightDrive.setPower(0);
+            if (gamepad1.a) {
+                intakeSub.setIntake(-1);
+            } else if (gamepad1.b) {
+                intakeSub.setIntake(1);
+            }else {
+                intakeSub.setIntake(0);
+            }
 
-            if (gamepad1.y) backLeftDrive.setPower(0.5);
-            else backLeftDrive.setPower(0);
-
-            if (gamepad1.left_bumper) elevatorSub.lateralLeftElevator.setPower(0.5);
-            else elevatorSub.lateralLeftElevator.setPower(0);
-
-            if (gamepad1.right_bumper) elevatorSub.lateralRightElevator.setPower(0.5);
-            else elevatorSub.lateralRightElevator.setPower(0);
-
-            if (gamepad2.left_bumper) elevatorSub.leftElevator.setPower(0.5);
-            else elevatorSub.leftElevator.setPower(0);
-
-            if (gamepad2.right_bumper) elevatorSub.rightElevator.setPower(0.5);
-            elevatorSub.rightElevator.setPower(0);
-
-//            if (gamepad1.back)
-//            intakeSub.intakeServo.setPower(1);
-//            else intakeSub.intakeServo.setPower(0);
-
-//            if (gamepad1.start)
-//                intakeSub.intakeRotation.setPosition(1);
-
-            if (gamepad2.x) clawSub.setClawServo(0.7);
-            else clawSub.setClawServo(1);
-            if (gamepad2.y) clawSub.leftRotate.setPosition(0);
-//            else clawSub.leftRotate.setPosition(0.5);
-            if(gamepad2.a) clawSub.rightRotate.setPosition(1);
-//            else clawSub.rightRotate.setPosition(0.5);
+            if (gamepad1.back) {
+                intakeSub.intakeRotation.setPosition(0);
+            } else if (gamepad1.start) {
+                intakeSub.intakeRotation.setPosition(0.3);
+            }
 
 
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = -gamepad1.right_stick_x;
+            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double rx = gamepad1.right_stick_x;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
