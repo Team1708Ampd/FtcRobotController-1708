@@ -24,13 +24,13 @@ public class BasicDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "rightFront");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "leftFront");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "rightBack");
-        backRightDrive = hardwareMap.get(DcMotor.class, "leftBack");
+        frontLeftDrive = hardwareMap.get(DcMotor.class, "leftFront");
+        frontRightDrive = hardwareMap.get(DcMotor.class, "rightFront");
+        backLeftDrive = hardwareMap.get(DcMotor.class, "leftBack");
+        backRightDrive = hardwareMap.get(DcMotor.class, "rightBack");
         backRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        elevatorSub.leftElevator = hardwareMap.get(DcMotor.class, "leftElevator");
+        elevatorSub.leftElevator = hardwareMap.dcMotor.get("leftElevator");
         elevatorSub.leftElevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevatorSub.rightElevator = hardwareMap.get(DcMotor.class, "rightElevator");
         elevatorSub.rightElevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -47,12 +47,22 @@ public class BasicDrive extends LinearOpMode {
         intakeSub.intakeRotation = hardwareMap.get(Servo.class, "rotate");
         intakeSub.intakeRotation.setDirection(Servo.Direction.REVERSE);
 
+        elevatorSub.leftElevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevatorSub.leftElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         waitForStart();
 
         while (opModeIsActive()) {
+            int position = elevatorSub.leftElevator.getCurrentPosition();
+
+            // Show the position of the motor on telemetry
+            telemetry.addData("Encoder Position", position);
+            telemetry.update();
 
             if (gamepad1.left_bumper) {
                 elevatorSub.setPower(0.5);
+                telemetry.addData("Encoder Position", elevatorSub.leftElevator.getCurrentPosition());
+                telemetry.update();
             } else if (gamepad1.right_bumper) {
                 elevatorSub.setPower(-0.5);
             } else {
@@ -81,10 +91,16 @@ public class BasicDrive extends LinearOpMode {
                 intakeSub.intakeRotation.setPosition(0.3);
             }
 
+            if (gamepad2.a) {
+                clawSub.setClawServo(0.75);
+            } else if (gamepad2.b) {
+                clawSub.setClawServo(1);
+            }
+
 
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x;
+            double x = gamepad1.right_stick_x * 1.1; // Counteract imperfect strafing
+            double rx = gamepad1.left_stick_x;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
