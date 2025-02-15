@@ -5,7 +5,7 @@ public final class AutoConstants {
     // Starting pose is center field, coordinates (0, 0)
     // Starting rotation at 0 degrees (robot facing opposite team)
     public static final double START_POSE_X = 0.0;
-    public static final double START_POSE_Y = 0.0;
-    public static final double START_POSE_THETA = Math.toRadians(0.0);
+    public static final double START_POSE_Y = 60.0;
+    public static final double START_POSE_THETA = Math.toRadians(270);
 
 }

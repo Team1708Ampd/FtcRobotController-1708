@@ -16,10 +16,10 @@ public class MeepMeepVis {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(50, 0, 0))
-                .strafeToLinearHeading(new Vector2d(25, 25), 0)
-                .turn(Math.toRadians(180))
-                .strafeToLinearHeading(new Vector2d(-25, 25), Math.toRadians(180))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, 60, Math.toRadians(270)))
+                .splineTo(new Vector2d(40, 40), Math.toRadians(270))
+                .turn(Math.toRadians(-45))
+                .strafeTo(new Vector2d(53, 53))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
