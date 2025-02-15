@@ -39,40 +39,42 @@ public class BasicDrive extends LinearOpMode {
         elevatorSub.lateralLeftElevator.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorSub.lateralRightElevator = hardwareMap.get(DcMotor.class, "lateralRightElevator");
 
-        clawSub.leftRotate = hardwareMap.get(Servo.class, "leftRotate");
-        clawSub.rightRotate = hardwareMap.get(Servo.class, "rightRotate");
+        clawSub.leftRotate = hardwareMap.get(CRServo.class, "leftRotate");
+        clawSub.rightRotate = hardwareMap.get(CRServo.class, "rightRotate");
         clawSub.clawServo = hardwareMap.get(Servo.class, "claw");
 
         intakeSub.intakeServo = hardwareMap.get(CRServo.class, "intake");
         intakeSub.intakeRotation = hardwareMap.get(Servo.class, "rotate");
-        intakeSub.intakeRotation.setDirection(Servo.Direction.REVERSE);
 
         elevatorSub.leftElevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevatorSub.rightElevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorSub.leftElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elevatorSub.rightElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            int position = elevatorSub.leftElevator.getCurrentPosition();
+            int leftPosition = elevatorSub.leftElevator.getCurrentPosition();
+            int rightPosition = elevatorSub.leftElevator.getCurrentPosition();
 
             // Show the position of the motor on telemetry
-            telemetry.addData("Encoder Position", position);
+            telemetry.addData("Left Encoder Position", leftPosition);
+            telemetry.addData("Right Encoder Position", rightPosition);
             telemetry.update();
 
             if (gamepad1.left_bumper) {
-                elevatorSub.setPower(0.5);
-                telemetry.addData("Encoder Position", elevatorSub.leftElevator.getCurrentPosition());
+                elevatorSub.setPower(0.75);
                 telemetry.update();
             } else if (gamepad1.right_bumper) {
-                elevatorSub.setPower(-0.5);
+                elevatorSub.setPower(-0.75);
             } else {
                 elevatorSub.setPower(0);
             }
 
             if (gamepad1.x) {
-                elevatorSub.setLateralPower(0.5);
+                elevatorSub.setLateralPower(0.75);
             } else if (gamepad1.y) {
-                elevatorSub.setLateralPower(-0.5);
+                elevatorSub.setLateralPower(-0.75);
             } else {
                 elevatorSub.setLateralPower(0);
             }
@@ -95,6 +97,20 @@ public class BasicDrive extends LinearOpMode {
                 clawSub.setClawServo(0.75);
             } else if (gamepad2.b) {
                 clawSub.setClawServo(1);
+            }
+
+            if (gamepad2.x) {
+                intakeSub.setRotate(1);
+            } else if (gamepad2.y) {
+                intakeSub.setRotate(0);
+            }
+
+            if (gamepad2.left_bumper) {
+                clawSub.setRotate(-0.6);
+            } else if (gamepad2.right_bumper) {
+                clawSub.setRotate(0.6);
+            } else {
+                clawSub.setRotate(0);
             }
 
 

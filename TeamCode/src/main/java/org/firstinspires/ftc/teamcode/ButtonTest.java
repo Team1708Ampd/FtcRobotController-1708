@@ -37,8 +37,8 @@ public class ButtonTest extends LinearOpMode {
         elevatorSub.lateralLeftElevator.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorSub.lateralRightElevator = hardwareMap.get(DcMotor.class, "lateralRightElevator");
 
-        clawSub.leftRotate = hardwareMap.get(Servo.class, "leftRotate");
-        clawSub.rightRotate = hardwareMap.get(Servo.class, "rightRotate");
+        clawSub.leftRotate = hardwareMap.get(CRServo.class, "leftRotate");
+        clawSub.rightRotate = hardwareMap.get(CRServo.class, "rightRotate");
         clawSub.clawServo = hardwareMap.get(Servo.class, "claw");
 
         intakeSub.intakeServo = hardwareMap.get(CRServo.class, "intake");
@@ -81,10 +81,7 @@ public class ButtonTest extends LinearOpMode {
 
             if (gamepad2.x) clawSub.setClawServo(0.7);
             else clawSub.setClawServo(1);
-            if (gamepad2.y) clawSub.leftRotate.setPosition(0);
-//            else clawSub.leftRotate.setPosition(0.5);
-            if(gamepad2.a) clawSub.rightRotate.setPosition(1);
-//            else clawSub.rightRotate.setPosition(0.5);
+
 
 
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
