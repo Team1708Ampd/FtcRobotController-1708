@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ClawSub;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSub;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSub;
 
-@TeleOp(name = "BasicDrive")
+@TeleOp(name = "2025 Main Teleop")
 public class BasicDrive extends LinearOpMode {
 
     DcMotor frontLeftDrive;
@@ -87,12 +87,6 @@ public class BasicDrive extends LinearOpMode {
                 intakeSub.setIntake(0);
             }
 
-            if (gamepad1.back) {
-                intakeSub.intakeRotation.setPosition(0);
-            } else if (gamepad1.start) {
-                intakeSub.intakeRotation.setPosition(0.3);
-            }
-
             if (gamepad2.a) {
                 clawSub.setClawServo(0.75);
             } else if (gamepad2.b) {
@@ -111,6 +105,18 @@ public class BasicDrive extends LinearOpMode {
                 clawSub.setRotate(0.6);
             } else {
                 clawSub.setRotate(0);
+            }
+
+            if (gamepad2.back) {
+                elevatorSub.lateralLeftElevator.setPower(0.5);
+            } else {
+                elevatorSub.lateralLeftElevator.setPower(0);
+            }
+
+            if (gamepad2.start) {
+                elevatorSub.lateralRightElevator.setPower(0.5);
+            } else {
+                elevatorSub.lateralRightElevator.setPower(0);
             }
 
 

@@ -16,7 +16,7 @@ public class ElevatorSub {
     }
 
     public void setLateralPower(double power) {
-//        lateralLeftElevator.setPower(power);
+        lateralLeftElevator.setPower(power);
         lateralRightElevator.setPower(power);
     }
 }
