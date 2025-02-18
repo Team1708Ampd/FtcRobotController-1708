@@ -72,9 +72,9 @@ public class BasicDrive extends LinearOpMode {
             }
 
             if (gamepad1.x) {
-                elevatorSub.setLateralPower(0.75);
+                elevatorSub.setLateralPower(1);
             } else if (gamepad1.y) {
-                elevatorSub.setLateralPower(-0.75);
+                elevatorSub.setLateralPower(-1);
             } else {
                 elevatorSub.setLateralPower(0);
             }
@@ -108,7 +108,7 @@ public class BasicDrive extends LinearOpMode {
             }
 
             if (gamepad2.back) {
-                elevatorSub.lateralLeftElevator.setPower(0.5);
+                elevatorSub.setPower(0.5);
             } else {
                 elevatorSub.lateralLeftElevator.setPower(0);
             }
