@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,6 +14,10 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.AutoConstants;
@@ -90,6 +95,14 @@ public class BasicAuto extends LinearOpMode {
                 .turn(Math.toRadians(-45))
                 .strafeTo(new Vector2d(53, 53));
 
+        TrajectoryActionBuilder auto1_seg1 = _drive.actionBuilder(initPose)
+                .strafeTo(new Vector2d(0, 35));
+
+        TrajectoryActionBuilder auto1_seg2 = _drive.actionBuilder(initPose)
+                .turnTo(Math.toRadians(180))
+                .splineTo(new Vector2d(-45, 20), Math.toRadians(180))
+                .strafeTo(new Vector2d(-45, 55));
+
         // Start 2
         TrajectoryActionBuilder auto2 = _drive.actionBuilder(initPose);
 
@@ -107,13 +120,13 @@ public class BasicAuto extends LinearOpMode {
 
         // Chose the trajectory to run
         Action chosenTrajectory;
-        chosenTrajectory = auto1.build();
 
         // Run all actions
         Actions.runBlocking(new SequentialAction(
-                chosenTrajectory,
+                auto1_seg1.build(),
                 elevatorSub.RunElevator_Timed(0.2, 2),
-                clawSub.SetClaw(CLAW_SCORING_POS)
+                clawSub.SetClaw(CLAW_SCORING_POS),
+                new ParallelAction(auto1_seg2.build())
         ));
 
     }

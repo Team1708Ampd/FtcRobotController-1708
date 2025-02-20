@@ -6,6 +6,6 @@ public final class AutoConstants {
     // Starting rotation at 0 degrees (robot facing opposite team)
     public static final double START_POSE_X = 0.0;
     public static final double START_POSE_Y = 60.0;
-    public static final double START_POSE_THETA = Math.toRadians(270);
+    public static final double START_POSE_THETA = Math.toRadians(90);
 
 }
