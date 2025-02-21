@@ -91,14 +91,9 @@ public class BasicAuto extends LinearOpMode {
 
         // Start 1
         TrajectoryActionBuilder auto1 = _drive.actionBuilder(initPose)
-                .splineTo(new Vector2d(40, 40), Math.toRadians(270))
-                .turn(Math.toRadians(-45))
-                .strafeTo(new Vector2d(53, 53));
-
-        TrajectoryActionBuilder auto1_seg1 = _drive.actionBuilder(initPose)
-                .strafeTo(new Vector2d(0, 35));
-
-        TrajectoryActionBuilder auto1_seg2 = _drive.actionBuilder(initPose)
+                .strafeTo(new Vector2d(0, 35))
+                .afterDisp(2, elevatorSub.RunElevator_Timed(0.2, 2))
+                .afterTime(0.5, clawSub.SetClaw(CLAW_SCORING_POS))
                 .turnTo(Math.toRadians(180))
                 .splineTo(new Vector2d(-45, 20), Math.toRadians(180))
                 .strafeTo(new Vector2d(-45, 55));
@@ -120,14 +115,10 @@ public class BasicAuto extends LinearOpMode {
 
         // Chose the trajectory to run
         Action chosenTrajectory;
+        chosenTrajectory = auto1.build();
 
         // Run all actions
-        Actions.runBlocking(new SequentialAction(
-                auto1_seg1.build(),
-                elevatorSub.RunElevator_Timed(0.2, 2),
-                clawSub.SetClaw(CLAW_SCORING_POS),
-                new ParallelAction(auto1_seg2.build())
-        ));
+        Actions.runBlocking(chosenTrajectory);
 
     }
 }

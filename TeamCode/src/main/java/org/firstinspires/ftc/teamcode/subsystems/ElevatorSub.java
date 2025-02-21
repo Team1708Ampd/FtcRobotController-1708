@@ -76,6 +76,7 @@ public class ElevatorSub {
         {
             if (!initialized)
             {
+                initialized = true;
                 setPower(mPower);
                 t = new ElapsedTime();
             }

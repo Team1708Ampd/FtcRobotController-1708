@@ -68,6 +68,7 @@ public class IntakeSub {
         {
             if (!initialized)
             {
+                initialized = true;
                 setIntake(mPower);
                 t = new ElapsedTime();
             }
