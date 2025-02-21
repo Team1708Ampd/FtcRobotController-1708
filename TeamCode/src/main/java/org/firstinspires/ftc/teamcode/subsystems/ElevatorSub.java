@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
 
 import androidx.annotation.NonNull;
 
@@ -17,6 +18,8 @@ public class ElevatorSub {
     public DcMotor rightElevator;
     public DcMotor lateralLeftElevator;
     public DcMotor lateralRightElevator;
+
+    public static double PULSES_PER_ROTATION_VERTICAL_ELEVATOR = 384.5;
 
     public void setPower(double power) {
         leftElevator.setPower(power);
@@ -90,6 +93,59 @@ public class ElevatorSub {
     public Action RunElevator_Timed(double power, double time)
     {
         return new RunElevator_Timed(power, time);
+    }
+
+    public class RunElevator_Rotations implements Action {
+
+        private boolean initialized = false;
+
+        // power at which to run
+        private double mPower = 0;
+
+        // num pulses to run (conversion from turns)
+        private int mTargetEncoderPosition = 0;
+
+        public RunElevator_Rotations(double power, int turns)
+        {
+            mPower = power;
+
+            // Convert turns to pulses
+            mTargetEncoderPosition = (int)(turns * PULSES_PER_ROTATION_VERTICAL_ELEVATOR);
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet)
+        {
+            if (!initialized)
+            {
+                // Reset the left and right motor encoders
+                leftElevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightElevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                // Sleep to give adequate time for the operation to complete
+                linearOpMode.sleep(100);
+
+                // Now set to positional mode for the operation
+                leftElevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightElevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // Set target position and power level
+                leftElevator.setTargetPosition(mTargetEncoderPosition);
+                rightElevator.setTargetPosition(mTargetEncoderPosition);
+
+                setPower(mPower);
+
+                initialized = true;
+            }
+
+            return (!leftElevator.isBusy() && !rightElevator.isBusy());
+        }
+    }
+
+    // Build the action
+    public Action RunElevator_Rotations(double power, int turns)
+    {
+        return new RunElevator_Rotations(power, turns);
     }
 
 }
